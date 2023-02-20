@@ -1,0 +1,1 @@
+- Use .json instead of .py for tokens and mail list
