@@ -1,0 +1,7 @@
+{
+    "sender": {"name": "StudyboxChecker","mail": "studybox.checker@gmail.com"},
+    "recipiants": [
+        {"name": "lexi","mail": "lexi.haeberle@gmail.com"},
+        {"name": "wolki","mail": "schwabischgaming@gmail.com"}
+    ]
+}

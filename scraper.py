@@ -6,6 +6,7 @@ import curses
 
 from mailjet_rest import Client
 import tokens
+import json
 
 
 def check_availability():
@@ -19,7 +20,10 @@ def check_availability():
     return True
 
 def main(avb):
+    mail=open("MailRecipiants.json")
+    mailData=json.load(mail)
     available = check_availability()
+    available = True
 
     if avb and available:
         return True
@@ -29,19 +33,18 @@ def main(avb):
         api_key=tokens.ApiKey
         api_secret=tokens.SecretKey
         mailjet = Client(auth=(api_key, api_secret), version="v3.1")
-        recipiants=[["lexi.haeberle@gmail.com","lexi"],["wolkenstein.f@gmail.com","Wolki"]]
-        for i in range(len(recipiants)):
+        for i in range(len(mailData["recipiants"])):
             data = {
                 'Messages': [
                                 {
                                         "From": {
-                                                "Email": "studybox.checker@gmail.com",
-                                                "Name": "Studybox checker"
+                                                "Email": mailData["sender"]["mail"],
+                                                "Name": mailData["sender"]["name"]
                                         },
                                         "To": [
                                                 {
-                                                    "Email": recipiants[i][0],
-                                                    "Name": recipiants[i][1]
+                                                    "Email": mailData["recipiants"][i]["mail"],
+                                                    "Name": mailData["recipiants"][i]["name"],
                                                 }
                                         ],
                                         "Subject": "Studybox available NOW!",
@@ -50,7 +53,9 @@ def main(avb):
                                 }
                         ]
                 }
+            print(data)
             mailjet.send.create(data=data)
+        time.sleep(100)
         return True
     
     elif(avb):
@@ -59,7 +64,7 @@ def main(avb):
         return False
 
 def program(stdscr):
-    availability = True
+    availability = False
     y,x=curses.window.getmaxyx(stdscr)
     y-=2
     stdscr.clear()
@@ -77,9 +82,9 @@ def program(stdscr):
             screen.addstr(i+1,x-1,"│")
 
         if(availability):
-            screen.addstr(10,7,"┌──────────┬────────────────────────┐")
+            screen.addstr(10,7,"┌──────────┬─────────────────────────┐")
             screen.addstr(11,7,"| "+now.strftime("%H:%M:%S ")+"│   Studybox available!   │")
-            screen.addstr(12,7,"└──────────┴────────────────────────┘")
+            screen.addstr(12,7,"└──────────┴─────────────────────────┘")
         else:
             screen.addstr(10,7,"┌──────────┬────────────────────────┐")
             screen.addstr(11,7,"| "+now.strftime("%H:%M:%S ")+"│ Studybox not available │")
