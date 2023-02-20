@@ -6,6 +6,7 @@ import curses
 
 from mailjet_rest import Client
 import tokens
+import MailRecipiants
 
 
 def check_availability():
@@ -29,7 +30,9 @@ def main(avb):
         api_key=tokens.ApiKey
         api_secret=tokens.SecretKey
         mailjet = Client(auth=(api_key, api_secret), version="v3.1")
-        recipiants=[["lexi.haeberle@gmail.com","lexi"],["wolkenstein.f@gmail.com","Wolki"]]
+        
+        recipiants = MailRecipiants.recipiants
+
         for i in range(len(recipiants)):
             data = {
                 'Messages': [
